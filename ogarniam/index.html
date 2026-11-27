@@ -69,7 +69,7 @@ header.top{display:flex;align-items:flex-start;justify-content:space-between;gap
 .syncform{display:flex;flex-direction:column;gap:10px}
 .syncform .row{display:flex;gap:8px;flex-wrap:wrap}
 .syncform .row input{flex:1 1 180px}
-.syncform .row .btn{flex:0 0 auto}
+.syncform .row .btn{flex:1 1 140px}
 .themeseg{display:flex;background:var(--surface-2);border-radius:999px;padding:4px;gap:4px}
 .themeseg button{flex:1;border:0;background:transparent;padding:10px 6px;border-radius:999px;font-weight:600;color:var(--muted)}
 .themeseg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
@@ -242,7 +242,7 @@ body.is-dragging .toast{opacity:0}
 .field > label,.lbl{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .inputrow{display:flex;gap:8px;align-items:flex-start}
 input[type=datetime-local]{-webkit-appearance:none;appearance:none;display:block;max-width:100%;min-height:50px;text-align:left}
-textarea,input[type=text],input[type=email],input[type=datetime-local]{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;font-size:16px}
+textarea,input[type=text],input[type=email],input[type=password],input[type=datetime-local]{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;font-size:16px}
 textarea{resize:none;min-height:54px}
 @keyframes pulse{0%{opacity:1;transform:scale(.95)}100%{opacity:0;transform:scale(1.15)}}
 .hint{font-size:12.5px;color:var(--muted);margin:0}
@@ -418,10 +418,15 @@ textarea{resize:none;min-height:54px}
     <div class="card-set" id="syncBox">
       <h3>Synchronizacja</h3>
       <p id="syncText">Zadania są tylko na tym urządzeniu.</p>
-      <div class="syncform" id="syncLogin" hidden>
-        <div class="row"><input type="email" id="syncEmail" placeholder="Twój e-mail" autocomplete="email" inputmode="email"><button class="btn primary" id="syncSend" type="button">Wyślij kod</button></div>
-        <div class="row" id="syncCodeRow" hidden><input type="text" id="syncCode" placeholder="Kod z e-maila" inputmode="numeric" autocomplete="one-time-code"><button class="btn primary" id="syncVerify" type="button">Zaloguj</button></div>
-      </div>
+      <form class="syncform" id="syncLogin" hidden autocomplete="on">
+        <input type="email" id="syncEmail" placeholder="E-mail" autocomplete="username" inputmode="email" required>
+        <input type="password" id="syncPass" placeholder="Hasło (min. 8 znaków)" autocomplete="current-password" minlength="8" required>
+        <div class="row">
+          <button class="btn primary" id="syncIn" type="submit">Zaloguj</button>
+          <button class="btn" id="syncUp" type="button">Załóż konto</button>
+        </div>
+        <p class="hint" id="syncMsg">Pierwszy raz? Wpisz e-mail, wymyśl hasło i kliknij „Załóż konto”. Na kolejnych urządzeniach użyj „Zaloguj”.</p>
+      </form>
       <div class="actions" id="syncUser" hidden>
         <button class="btn" id="syncNow" type="button">Synchronizuj teraz</button>
         <button class="btn" id="syncOut" type="button">Wyloguj</button>
@@ -1258,7 +1263,7 @@ darkMQ.addEventListener?.('change', applyTheme);
 /* ---------- Synchronizacja między urządzeniami (Supabase) ---------- */
 const CFG = window.APP_CONFIG || {};
 const SYNC_CFG = !!(CFG.supabaseUrl && CFG.supabaseKey);
-const LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js';
+const LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
 let sb = null, user = null, chan = null, pushOn = false, startedFor = null, pushT = null;
 let syncState = {s:'idle', at:0, msg:''};
 
@@ -1375,30 +1380,43 @@ function renderSync(){
   $('#syncLogin').hidden = !(sb && !user); $('#syncUser').hidden = !(sb && user);
   if (SYNC_CFG && !sb) { txt.textContent = 'Łączę z synchronizacją… Jeśli nie ma internetu, połączę się, gdy wróci.'; return; }
   if (!SYNC_CFG) { txt.textContent = 'Zadania są tylko na tym urządzeniu. Synchronizacja ruszy, gdy w pliku config.js pojawią się dane projektu Supabase.'; return; }
-  if (!user) { txt.textContent = 'Zaloguj się tym samym e-mailem na telefonie i komputerze, a zadania będą wszędzie takie same. Wyślę Ci kod na e-mail, bez hasła.'; return; }
+  if (!user) { txt.textContent = 'Zaloguj się tym samym e-mailem i hasłem na telefonie i komputerze, a zadania będą wszędzie takie same.'; return; }
   const when = syncState.at ? ' Ostatnio: ' + hm(new Date(syncState.at)) + '.' : '';
   const push = pushOn ? ' Przypomnienia przyjdą nawet przy zamkniętej aplikacji.' : (Notification?.permission === 'granted' ? '' : ' Włącz powiadomienia poniżej, żeby przypomnienia przychodziły też przy zamkniętej aplikacji.');
   txt.textContent = 'Zalogowano jako ' + (user.email || 'Ty') + '.' + when + push;
 }
-let otpEmail = '';
-$('#syncSend').onclick = async () => {
-  const email = $('#syncEmail').value.trim();
-  if (!/^\S+@\S+\.\S+$/.test(email)) { toast('Wpisz poprawny e-mail'); return; }
-  $('#syncSend').disabled = true;
-  const { error } = await sb.auth.signInWithOtp({email, options:{shouldCreateUser:true}});
-  $('#syncSend').disabled = false;
-  if (error) { toast(error.status === 429 ? 'Za dużo prób, spróbuj za kilka minut' : 'Nie udało się wysłać kodu: ' + error.message); return; }
-  otpEmail = email; $('#syncCodeRow').hidden = false; $('#syncCode').focus(); toast('Wysłano kod na ' + email);
-};
-$('#syncVerify').onclick = async () => {
-  const token = $('#syncCode').value.replace(/\s/g,'');
-  if (!token) return;
-  $('#syncVerify').disabled = true;
-  const { error } = await sb.auth.verifyOtp({email:otpEmail, token, type:'email'});
-  $('#syncVerify').disabled = false;
-  if (error) { toast('Kod nie pasuje albo wygasł. Wyślij nowy.'); return; }
-  $('#syncCodeRow').hidden = true; $('#syncCode').value = ''; toast('Zalogowano, synchronizuję zadania');
-};
+function authMsg(t, bad){ const m = $('#syncMsg'); m.textContent = t; m.className = 'hint' + (bad ? '' : ' live'); }
+function authErr(error, signup){
+  const msg = (error && error.message || '').toLowerCase();
+  if (error && error.status === 429) return 'Za dużo prób. Spróbuj ponownie za kilka minut.';
+  if (msg.includes('invalid login')) return 'Nieprawidłowy e-mail albo hasło. Jeśli nie masz jeszcze konta, kliknij „Załóż konto”.';
+  if (msg.includes('already registered') || msg.includes('already exists')) return 'To konto już istnieje. Kliknij „Zaloguj”.';
+  if (msg.includes('signups not allowed') || msg.includes('signup is disabled')) return 'Zakładanie nowych kont jest wyłączone.';
+  if (msg.includes('password')) return 'Hasło musi mieć co najmniej 8 znaków.';
+  if (msg.includes('email')) return 'Sprawdź, czy e-mail jest wpisany poprawnie.';
+  return (signup ? 'Nie udało się założyć konta: ' : 'Nie udało się zalogować: ') + (error && error.message || 'brak połączenia');
+}
+function authInput(){
+  const email = $('#syncEmail').value.trim(), password = $('#syncPass').value;
+  if (!/^\S+@\S+\.\S+$/.test(email)) { authMsg('Wpisz poprawny e-mail.', true); $('#syncEmail').focus(); return null; }
+  if (password.length < 8) { authMsg('Hasło musi mieć co najmniej 8 znaków.', true); $('#syncPass').focus(); return null; }
+  return {email, password};
+}
+async function authDo(signup){
+  const v = authInput(); if (!v || !sb) return;
+  const btns = [$('#syncIn'), $('#syncUp')]; btns.forEach(b => b.disabled = true);
+  authMsg(signup ? 'Zakładam konto…' : 'Loguję…');
+  let res;
+  try { res = signup ? await sb.auth.signUp(v) : await sb.auth.signInWithPassword(v); }
+  catch (e) { res = {error: e}; }
+  btns.forEach(b => b.disabled = false);
+  if (res.error) { authMsg(authErr(res.error, signup), true); return; }
+  if (signup && !res.data?.session) { authMsg('Konto założone. Teraz kliknij „Zaloguj”.'); return; }
+  $('#syncPass').value = '';
+  toast(signup ? 'Konto założone, synchronizuję zadania' : 'Zalogowano, synchronizuję zadania');
+}
+$('#syncLogin').addEventListener('submit', e => { e.preventDefault(); authDo(false); });
+$('#syncUp').onclick = () => authDo(true);
 $('#syncNow').onclick = () => syncAll();
 $('#syncOut').onclick = async () => {
   try { const reg = await navigator.serviceWorker?.ready; const sub = await reg?.pushManager?.getSubscription();
