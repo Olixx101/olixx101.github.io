@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<title>Zadania Magdy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: powitanie z adresem i zrzutem, galeria funkcji, przełącznik Android / Windows z krokami, codzienne gesty, pomoc. Styl aplikacji: limonka, grafit, białe karty */
+:root{--bg:#F6F4F4;--surface:#FFFFFF;--surface-2:#EAECEF;--ink:#2D3741;--muted:#67707A;--line:#E5E6E8;--accent:#E6F483;--accent-ink:#2D3741;--accent-soft:#F3F9C9;--warn-soft:#F8EEDA;--warn:#8A5A0E;--shot-border:#DCE0E4;
+--f:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#1A2027;--surface:#242C35;--surface-2:#2E3841;--ink:#F1F3F4;--muted:#A4AEB8;--line:#36414C;--accent-soft:#3A4229;--warn-soft:#3B3121;--warn:#E9B35A;--shot-border:#3A4652;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A2027;--surface:#242C35;--surface-2:#2E3841;--ink:#F1F3F4;--muted:#A4AEB8;--line:#36414C;--accent-soft:#3A4229;--warn-soft:#3B3121;--warn:#E9B35A;--shot-border:#3A4652;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f);-webkit-font-smoothing:antialiased;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px;display:flex;flex-direction:column;gap:36px}
+img{max-width:100%;height:auto;display:block}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:28px;align-items:center}
+.hero h1{font-weight:300;font-size:clamp(38px,8vw,60px);line-height:1;letter-spacing:-.025em;margin:0 0 14px;text-wrap:balance}
+.hero p{color:var(--muted);margin:0 0 18px;max-width:46ch}
+.addr{background:var(--surface);border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.addr small{display:block;color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.addr b{font-size:clamp(16px,4.4vw,19px);font-weight:600;white-space:nowrap}
+.addr .grow{flex:1 1 260px;min-width:0}
+.copy{border:0;border-radius:999px;background:var(--accent);color:var(--accent-ink);font:600 14px var(--f);padding:10px 16px;cursor:pointer}
+.phone{border-radius:30px;border:6px solid var(--ink);overflow:hidden;box-shadow:0 18px 40px rgba(45,55,65,.18);background:var(--surface);max-width:280px;margin:0 auto}
+h2.sec{font-weight:400;font-size:clamp(26px,5vw,34px);letter-spacing:-.015em;margin:0 0 6px;line-height:1.15}
+.sub{color:var(--muted);margin:0 0 16px}
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.gallery figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.gallery img,.shot{border-radius:20px;border:1px solid var(--shot-border)}
+.gallery figcaption{font-size:14px;color:var(--muted)}
+.gallery figcaption b{display:block;color:var(--ink);font-size:15px}
+.tabs{display:flex;background:var(--surface-2);border-radius:999px;padding:4px;gap:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin:0 0 16px}
+.tabs a{flex:1;text-align:center;text-decoration:none;color:var(--muted);font-weight:600;padding:11px;border-radius:999px}
+.tabs a[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05)}
+.steps{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border-radius:24px;padding:20px}
+.card h3{margin:0 0 8px;font-weight:600;font-size:19px;line-height:1.3;display:flex;gap:12px;align-items:center}
+.card h3 .n{flex:none;width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:15px;font-weight:700}
+.card p{margin:6px 0;color:var(--muted)}
+.card ol,.card ul{margin:6px 0;padding-left:22px;color:var(--muted)}
+.card li{margin:5px 0}
+.card b{color:var(--ink);font-weight:600}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:20px;align-items:start}
+.split .shot{max-width:220px}
+.k{display:inline-block;background:var(--surface-2);color:var(--ink);border-radius:8px;padding:0 7px;font-weight:600;font-size:14px;white-space:nowrap}
+.tip{background:var(--accent-soft);color:var(--ink);border-radius:16px;padding:12px 14px;font-size:14.5px;margin:10px 0 0}
+.warn{background:var(--warn-soft);color:var(--ink);border-radius:16px;padding:12px 14px;font-size:14.5px;margin:10px 0 0}
+.warn b{color:var(--warn)}
+.qr{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center}
+.qr svg{width:150px;height:150px;border-radius:14px;border:1px solid var(--shot-border);background:#fff;padding:4px}
+.gest{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.6fr);gap:10px 16px;margin:0}
+.gest dt{font-weight:600}
+.gest dd{margin:0;color:var(--muted)}
+.foot{color:var(--muted);font-size:14px;text-align:center}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+a{color:var(--ink);text-decoration-thickness:2px;text-decoration-color:var(--accent);text-underline-offset:3px}
+@media (max-width:720px){.hero{grid-template-columns:1fr}.phone{max-width:230px}.gallery{grid-template-columns:repeat(3,minmax(140px,1fr));overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}.gallery figure{scroll-snap-align:start}.split{grid-template-columns:1fr}.split .shot{max-width:240px}}
+@media (max-width:460px){.qr{grid-template-columns:1fr}.gest{grid-template-columns:1fr;gap:2px}.gest dd{margin-bottom:10px}}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <h1>Cześć Magda, oto Twoja aplikacja do zadań</h1>
+      <p>Zapisujesz zadania, ustawiasz priorytet i termin, a aplikacja sama przypomina, co trzeba zrobić. Działa na telefonie i na komputerze, a zadania są wszędzie takie same.</p>
+      <div class="addr">
+        <div class="grow"><small>Twój adres</small><b id="addr">olixx101.github.io/magda/</b></div>
+        <button class="copy" id="copyBtn" type="button">Kopiuj adres</button>
+      </div>
+    </div>
+    <div class="phone"><img src="instrukcja-img/1-lista.webp" width="640" height="1302" alt="Lista zadań w aplikacji: kafelki z priorytetem, terminem i przypomnieniem, na dole przycisk Nowe zadanie"></div>
+  </header>
+
+  <section>
+    <h2 class="sec">Tak wygląda aplikacja</h2>
+    <p class="sub">Trzy rzeczy, z których będziesz korzystać najczęściej.</p>
+    <div class="gallery">
+      <figure><img src="instrukcja-img/2-nowe.webp" width="640" height="1302" alt="Okno nowego zadania z rozpoznanym priorytetem i terminem" loading="lazy"><figcaption><b>Nowe zadanie</b>Napisz albo podyktuj, np. „pilne, zadzwonić do hurtowni jutro o 10”. Priorytet i termin ustawią się same.</figcaption></figure>
+      <figure><img src="instrukcja-img/3-kalendarz.webp" width="640" height="1302" alt="Kalendarz w widoku tygodnia z paskami obłożenia" loading="lazy"><figcaption><b>Kalendarz</b>Widok tygodnia albo miesiąca pokazuje, ile zadań masz każdego dnia.</figcaption></figure>
+      <figure><img src="instrukcja-img/4-logowanie.webp" width="640" height="1302" alt="Ustawienia: logowanie e-mailem i hasłem oraz powiadomienia" loading="lazy"><figcaption><b>Ustawienia</b>Tu logujesz się i włączasz powiadomienia. Robisz to tylko raz na każdym urządzeniu.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="instalacja">
+    <h2 class="sec">Instalacja krok po kroku</h2>
+    <p class="sub">Wybierz urządzenie. Zacznij od tego, którego będziesz używać najczęściej.</p>
+    <nav class="tabs" role="tablist">
+      <a href="#android" id="t-android" role="tab" aria-selected="true">Telefon z Androidem</a>
+      <a href="#windows" id="t-windows" role="tab" aria-selected="false">Komputer z Windows</a>
+    </nav>
+
+    <div class="steps" id="android" role="tabpanel">
+      <div class="card"><h3><span class="n">1</span>Otwórz adres na telefonie</h3>
+        <p>Uruchom <b>Chrome</b> i wpisz <b>olixx101.github.io/magda/</b>. Jeśli czytasz tę stronę na komputerze, zeskanuj aparatem telefonu kod QR z zakładki „Komputer z Windows”.</p></div>
+
+      <div class="card"><h3><span class="n">2</span>Dodaj ikonkę na ekran telefonu</h3>
+        <ol><li>Jeśli na dole pojawi się pasek <b>„Zainstaluj aplikację”</b>, dotknij go.</li>
+          <li>Jeśli nie, dotknij <span class="k">⋮</span> w prawym górnym rogu Chrome i wybierz <b>„Zainstaluj aplikację”</b> albo <b>„Dodaj do ekranu głównego”</b>, potem <b>Zainstaluj</b>.</li>
+          <li>Na ekranie pojawi się limonkowa ikonka <b>Zadania</b>. <b>Od teraz otwieraj aplikację z tej ikonki.</b></li></ol>
+        <p class="tip">Przytrzymaj ikonkę palcem, a zobaczysz skrót <b>„Nowe zadanie”</b>.</p></div>
+
+      <div class="card split"><div><h3><span class="n">3</span>Załóż konto</h3>
+        <ol><li>Dotknij limonkowej <b>zębatki</b> w prawym górnym rogu.</li>
+          <li>W sekcji <b>Synchronizacja</b> wpisz swój e-mail i wymyśl hasło (co najmniej 8 znaków).</li>
+          <li>Dotknij <b>„Załóż konto”</b>. Na komputerze później użyjesz <b>„Zaloguj”</b> z tym samym e-mailem i hasłem.</li></ol>
+        <p>Logujesz się tylko raz, aplikacja Cię zapamięta. Twoje zadania widzisz tylko Ty.</p></div>
+        <img class="shot" src="instrukcja-img/4-logowanie.webp" width="640" height="1302" alt="Formularz logowania z polami e-mail i hasło" loading="lazy"></div>
+
+      <div class="card"><h3><span class="n">4</span>Włącz przypomnienia</h3>
+        <ol><li>W tych samych ustawieniach dotknij <b>„Włącz powiadomienia”</b> i wybierz <b>Zezwól</b>.</li>
+          <li>Żeby przypomnienia przychodziły na czas, wyłącz oszczędzanie baterii dla Chrome: <b>Ustawienia telefonu → Aplikacje → Chrome → Bateria → Bez ograniczeń</b>. Nazwy mogą się trochę różnić zależnie od telefonu.</li></ol>
+        <p class="warn"><b>Nie widzisz powiadomień?</b> Sprawdź Ustawienia telefonu → Aplikacje → Zadania (albo Chrome) → Powiadomienia. Tryb „Nie przeszkadzać” też je wycisza.</p></div>
+    </div>
+
+    <div class="steps" id="windows" role="tabpanel" hidden>
+      <div class="card"><h3><span class="n">1</span>Otwórz adres w Edge albo Chrome</h3>
+        <p>Uruchom <b>Microsoft Edge</b> albo <b>Google Chrome</b> i wpisz <b>olixx101.github.io/magda/</b>.</p>
+        <img class="shot" src="instrukcja-img/5-komputer.webp" width="1100" height="760" alt="Aplikacja z zadaniami otwarta na komputerze" loading="lazy" style="margin-top:10px"></div>
+
+      <div class="card"><h3><span class="n">2</span>Zainstaluj aplikację na komputerze</h3>
+        <ul><li><b>Edge:</b> kliknij ikonkę <b>„Aplikacja dostępna”</b> po prawej stronie paska adresu albo <span class="k">⋯</span> → <b>Aplikacje</b> → <b>„Zainstaluj tę witrynę jako aplikację”</b> → <b>Zainstaluj</b>.</li>
+          <li><b>Chrome:</b> kliknij ikonkę instalacji (monitor ze strzałką) po prawej stronie paska adresu albo <span class="k">⋮</span> → <b>„Prześlij, zapisz i udostępnij”</b> → <b>„Zainstaluj stronę jako aplikację”</b>.</li></ul>
+        <p>Aplikacja otworzy się w osobnym oknie i pojawi w menu Start.</p></div>
+
+      <div class="card"><h3><span class="n">3</span>Ikonka na pulpicie i pasku zadań</h3>
+        <ul><li><b>Pasek zadań:</b> gdy aplikacja jest otwarta, kliknij prawym przyciskiem jej ikonkę na pasku zadań → <b>„Przypnij do paska zadań”</b>.</li>
+          <li><b>Pulpit w Edge:</b> wpisz w pasku adresu <span class="k">edge://apps</span>, kliknij <span class="k">⋯</span> przy aplikacji Zadania → <b>„Utwórz skrót na pulpicie”</b>.</li>
+          <li><b>Pulpit w Chrome:</b> wpisz <span class="k">chrome://apps</span>, kliknij prawym przyciskiem ikonkę Zadania → <b>„Utwórz skróty”</b> → zaznacz <b>Pulpit</b> → <b>Utwórz</b>.</li></ul></div>
+
+      <div class="card"><h3><span class="n">4</span>Ikonka na telefon prosto z komputera</h3>
+        <div class="qr">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="Kod QR z adresem olixx101.github.io/magda/"><rect width="33" height="33" fill="#FFFFFF"/><path d="M2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM5,2h1v1h-1zM6,2h1v1h-1zM7,2h1v1h-1zM8,2h1v1h-1zM10,2h1v1h-1zM11,2h1v1h-1zM12,2h1v1h-1zM15,2h1v1h-1zM16,2h1v1h-1zM17,2h1v1h-1zM19,2h1v1h-1zM20,2h1v1h-1zM24,2h1v1h-1zM25,2h1v1h-1zM26,2h1v1h-1zM27,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM2,3h1v1h-1zM8,3h1v1h-1zM12,3h1v1h-1zM13,3h1v1h-1zM17,3h1v1h-1zM19,3h1v1h-1zM22,3h1v1h-1zM24,3h1v1h-1zM30,3h1v1h-1zM2,4h1v1h-1zM4,4h1v1h-1zM5,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM10,4h1v1h-1zM11,4h1v1h-1zM13,4h1v1h-1zM15,4h1v1h-1zM19,4h1v1h-1zM20,4h1v1h-1zM21,4h1v1h-1zM24,4h1v1h-1zM26,4h1v1h-1zM27,4h1v1h-1zM28,4h1v1h-1zM30,4h1v1h-1zM2,5h1v1h-1zM4,5h1v1h-1zM5,5h1v1h-1zM6,5h1v1h-1zM8,5h1v1h-1zM11,5h1v1h-1zM14,5h1v1h-1zM17,5h1v1h-1zM18,5h1v1h-1zM19,5h1v1h-1zM22,5h1v1h-1zM24,5h1v1h-1zM26,5h1v1h-1zM27,5h1v1h-1zM28,5h1v1h-1zM30,5h1v1h-1zM2,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM11,6h1v1h-1zM13,6h1v1h-1zM14,6h1v1h-1zM17,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM24,6h1v1h-1zM26,6h1v1h-1zM27,6h1v1h-1zM28,6h1v1h-1zM30,6h1v1h-1zM2,7h1v1h-1zM8,7h1v1h-1zM10,7h1v1h-1zM12,7h1v1h-1zM15,7h1v1h-1zM16,7h1v1h-1zM18,7h1v1h-1zM19,7h1v1h-1zM20,7h1v1h-1zM24,7h1v1h-1zM30,7h1v1h-1zM2,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM10,8h1v1h-1zM12,8h1v1h-1zM14,8h1v1h-1zM16,8h1v1h-1zM18,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM24,8h1v1h-1zM25,8h1v1h-1zM26,8h1v1h-1zM27,8h1v1h-1zM28,8h1v1h-1zM29,8h1v1h-1zM30,8h1v1h-1zM11,9h1v1h-1zM15,9h1v1h-1zM2,10h1v1h-1zM4,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM12,10h1v1h-1zM15,10h1v1h-1zM17,10h1v1h-1zM18,10h1v1h-1zM22,10h1v1h-1zM25,10h1v1h-1zM28,10h1v1h-1zM30,10h1v1h-1zM9,11h1v1h-1zM12,11h1v1h-1zM13,11h1v1h-1zM18,11h1v1h-1zM19,11h1v1h-1zM21,11h1v1h-1zM22,11h1v1h-1zM23,11h1v1h-1zM24,11h1v1h-1zM25,11h1v1h-1zM29,11h1v1h-1zM30,11h1v1h-1zM2,12h1v1h-1zM4,12h1v1h-1zM5,12h1v1h-1zM6,12h1v1h-1zM8,12h1v1h-1zM10,12h1v1h-1zM11,12h1v1h-1zM14,12h1v1h-1zM15,12h1v1h-1zM16,12h1v1h-1zM18,12h1v1h-1zM19,12h1v1h-1zM20,12h1v1h-1zM21,12h1v1h-1zM22,12h1v1h-1zM23,12h1v1h-1zM25,12h1v1h-1zM26,12h1v1h-1zM27,12h1v1h-1zM28,12h1v1h-1zM30,12h1v1h-1zM2,13h1v1h-1zM3,13h1v1h-1zM5,13h1v1h-1zM9,13h1v1h-1zM12,13h1v1h-1zM16,13h1v1h-1zM17,13h1v1h-1zM18,13h1v1h-1zM20,13h1v1h-1zM22,13h1v1h-1zM26,13h1v1h-1zM27,13h1v1h-1zM5,14h1v1h-1zM8,14h1v1h-1zM10,14h1v1h-1zM12,14h1v1h-1zM13,14h1v1h-1zM15,14h1v1h-1zM16,14h1v1h-1zM18,14h1v1h-1zM21,14h1v1h-1zM23,14h1v1h-1zM24,14h1v1h-1zM30,14h1v1h-1zM2,15h1v1h-1zM3,15h1v1h-1zM4,15h1v1h-1zM6,15h1v1h-1zM11,15h1v1h-1zM13,15h1v1h-1zM14,15h1v1h-1zM15,15h1v1h-1zM16,15h1v1h-1zM19,15h1v1h-1zM21,15h1v1h-1zM22,15h1v1h-1zM23,15h1v1h-1zM24,15h1v1h-1zM25,15h1v1h-1zM29,15h1v1h-1zM30,15h1v1h-1zM4,16h1v1h-1zM5,16h1v1h-1zM8,16h1v1h-1zM11,16h1v1h-1zM13,16h1v1h-1zM17,16h1v1h-1zM21,16h1v1h-1zM23,16h1v1h-1zM24,16h1v1h-1zM26,16h1v1h-1zM30,16h1v1h-1zM2,17h1v1h-1zM4,17h1v1h-1zM6,17h1v1h-1zM10,17h1v1h-1zM12,17h1v1h-1zM14,17h1v1h-1zM15,17h1v1h-1zM17,17h1v1h-1zM18,17h1v1h-1zM20,17h1v1h-1zM23,17h1v1h-1zM26,17h1v1h-1zM4,18h1v1h-1zM6,18h1v1h-1zM7,18h1v1h-1zM8,18h1v1h-1zM9,18h1v1h-1zM10,18h1v1h-1zM12,18h1v1h-1zM13,18h1v1h-1zM14,18h1v1h-1zM15,18h1v1h-1zM18,18h1v1h-1zM20,18h1v1h-1zM22,18h1v1h-1zM23,18h1v1h-1zM24,18h1v1h-1zM25,18h1v1h-1zM30,18h1v1h-1zM4,19h1v1h-1zM6,19h1v1h-1zM7,19h1v1h-1zM9,19h1v1h-1zM10,19h1v1h-1zM13,19h1v1h-1zM14,19h1v1h-1zM17,19h1v1h-1zM19,19h1v1h-1zM21,19h1v1h-1zM22,19h1v1h-1zM23,19h1v1h-1zM24,19h1v1h-1zM25,19h1v1h-1zM28,19h1v1h-1zM29,19h1v1h-1zM30,19h1v1h-1zM2,20h1v1h-1zM3,20h1v1h-1zM6,20h1v1h-1zM8,20h1v1h-1zM10,20h1v1h-1zM11,20h1v1h-1zM13,20h1v1h-1zM15,20h1v1h-1zM16,20h1v1h-1zM17,20h1v1h-1zM21,20h1v1h-1zM23,20h1v1h-1zM24,20h1v1h-1zM25,20h1v1h-1zM26,20h1v1h-1zM27,20h1v1h-1zM30,20h1v1h-1zM4,21h1v1h-1zM5,21h1v1h-1zM9,21h1v1h-1zM10,21h1v1h-1zM11,21h1v1h-1zM14,21h1v1h-1zM16,21h1v1h-1zM20,21h1v1h-1zM21,21h1v1h-1zM22,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM2,22h1v1h-1zM3,22h1v1h-1zM5,22h1v1h-1zM6,22h1v1h-1zM8,22h1v1h-1zM9,22h1v1h-1zM11,22h1v1h-1zM13,22h1v1h-1zM15,22h1v1h-1zM16,22h1v1h-1zM17,22h1v1h-1zM18,22h1v1h-1zM21,22h1v1h-1zM22,22h1v1h-1zM23,22h1v1h-1zM24,22h1v1h-1zM25,22h1v1h-1zM26,22h1v1h-1zM27,22h1v1h-1zM29,22h1v1h-1zM10,23h1v1h-1zM12,23h1v1h-1zM13,23h1v1h-1zM15,23h1v1h-1zM16,23h1v1h-1zM17,23h1v1h-1zM18,23h1v1h-1zM19,23h1v1h-1zM22,23h1v1h-1zM26,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM30,23h1v1h-1zM2,24h1v1h-1zM3,24h1v1h-1zM4,24h1v1h-1zM5,24h1v1h-1zM6,24h1v1h-1zM7,24h1v1h-1zM8,24h1v1h-1zM10,24h1v1h-1zM11,24h1v1h-1zM12,24h1v1h-1zM13,24h1v1h-1zM14,24h1v1h-1zM17,24h1v1h-1zM18,24h1v1h-1zM19,24h1v1h-1zM22,24h1v1h-1zM24,24h1v1h-1zM26,24h1v1h-1zM30,24h1v1h-1zM2,25h1v1h-1zM8,25h1v1h-1zM15,25h1v1h-1zM18,25h1v1h-1zM20,25h1v1h-1zM21,25h1v1h-1zM22,25h1v1h-1zM26,25h1v1h-1zM29,25h1v1h-1zM2,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM6,26h1v1h-1zM8,26h1v1h-1zM11,26h1v1h-1zM12,26h1v1h-1zM13,26h1v1h-1zM14,26h1v1h-1zM15,26h1v1h-1zM17,26h1v1h-1zM18,26h1v1h-1zM21,26h1v1h-1zM22,26h1v1h-1zM23,26h1v1h-1zM24,26h1v1h-1zM25,26h1v1h-1zM26,26h1v1h-1zM27,26h1v1h-1zM29,26h1v1h-1zM30,26h1v1h-1zM2,27h1v1h-1zM4,27h1v1h-1zM5,27h1v1h-1zM6,27h1v1h-1zM8,27h1v1h-1zM11,27h1v1h-1zM12,27h1v1h-1zM13,27h1v1h-1zM15,27h1v1h-1zM17,27h1v1h-1zM18,27h1v1h-1zM22,27h1v1h-1zM26,27h1v1h-1zM27,27h1v1h-1zM28,27h1v1h-1zM30,27h1v1h-1zM2,28h1v1h-1zM4,28h1v1h-1zM5,28h1v1h-1zM6,28h1v1h-1zM8,28h1v1h-1zM10,28h1v1h-1zM13,28h1v1h-1zM17,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM26,28h1v1h-1zM29,28h1v1h-1zM30,28h1v1h-1zM2,29h1v1h-1zM8,29h1v1h-1zM17,29h1v1h-1zM18,29h1v1h-1zM20,29h1v1h-1zM22,29h1v1h-1zM25,29h1v1h-1zM26,29h1v1h-1zM27,29h1v1h-1zM2,30h1v1h-1zM3,30h1v1h-1zM4,30h1v1h-1zM5,30h1v1h-1zM6,30h1v1h-1zM7,30h1v1h-1zM8,30h1v1h-1zM10,30h1v1h-1zM11,30h1v1h-1zM12,30h1v1h-1zM14,30h1v1h-1zM17,30h1v1h-1zM18,30h1v1h-1zM21,30h1v1h-1zM22,30h1v1h-1zM24,30h1v1h-1zM27,30h1v1h-1zM30,30h1v1h-1z" fill="#2D3741"/></svg>
+          <div><p><b>Zeskanuj ten kod aparatem telefonu.</b> Otworzy się Twoja aplikacja w przeglądarce telefonu.</p>
+            <p>Potem dodaj ikonkę na ekran tak jak w zakładce <a href="#android">„Telefon z Androidem”</a>, krok 2: <span class="k">⋮</span> → <b>„Zainstaluj aplikację”</b>.</p></div>
+        </div></div>
+
+      <div class="card"><h3><span class="n">5</span>Zaloguj się i włącz powiadomienia</h3>
+        <ol><li>Kliknij <b>zębatkę</b> → w sekcji <b>Synchronizacja</b> wpisz ten sam e-mail i hasło co na telefonie → <b>„Zaloguj”</b>. Jeśli zaczynasz od komputera, kliknij <b>„Załóż konto”</b>.</li>
+          <li>Kliknij <b>„Włącz powiadomienia”</b> → <b>Zezwól</b>.</li>
+          <li>W Windows sprawdź <b>Start → Ustawienia → System → Powiadomienia</b>: mają być włączone, także dla Edge albo Chrome.</li></ol>
+        <p class="tip"><b>Skróty:</b> <span class="k">Esc</span> zamyka okno zadania. Do dyktowania kliknij pole zadania i naciśnij <span class="k">Win</span> + <span class="k">H</span> albo użyj Wispr Flow.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Na co dzień</h2>
+    <div class="card">
+      <dl class="gest">
+        <dt>Dodawanie</dt><dd>Przycisk „+ Nowe zadanie” na dole. Możesz dyktować mikrofonem z klawiatury telefonu albo przez Wispr Flow.</dd>
+        <dt>Zrobione</dt><dd>Dotknij kółka po lewej albo przesuń kafelek w prawo. Zadanie trafi do zakładki „Zrobione”.</dd>
+        <dt>Usuwanie</dt><dd>Przesuń kafelek w lewo. Każdą akcję możesz cofnąć przyciskiem „Cofnij”.</dd>
+        <dt>Kolejność</dt><dd>„Auto” układa według priorytetu i terminu. Przytrzymaj i przeciągnij kafelek, żeby ułożyć po swojemu.</dd>
+        <dt>Przypomnienia</dt><dd>Ustawiają się same: przy pilnych dzień, 3 godziny i 30 minut przed terminem. Możesz dodać własne.</dd>
+        <dt>Kalendarz</dt><dd>Miesiąc albo tydzień. Dotknij dnia, żeby zobaczyć listę i dodać zadanie na ten dzień.</dd>
+        <dt>Tryb ciemny</dt><dd>Ikonka księżyca obok zębatki.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Gdy coś nie działa</h2>
+    <div class="card"><ul>
+      <li><b>Zadania nie pojawiają się na drugim urządzeniu:</b> sprawdź, czy pod nagłówkiem jest napis „Zsynchronizowano”. Jeśli widzisz „Offline”, sprawdź internet. Zmiany wyślą się same.</li>
+      <li><b>Nie pamiętasz hasła:</b> napisz do Oli, ustawi Ci nowe.</li>
+      <li><b>Aplikacja wygląda inaczej niż na zrzutach:</b> zamknij ją i otwórz ponownie. Nowa wersja pobiera się sama.</li>
+    </ul></div>
+  </section>
+
+  <p class="foot">Pytania? Napisz do Oli.</p>
+</div>
+<script>
+(() => {
+  const show = () => {
+    const id = location.hash === '#windows' ? 'windows' : 'android';
+    for (const n of ['android', 'windows']) {
+      document.getElementById(n).hidden = n !== id;
+      document.getElementById('t-' + n).setAttribute('aria-selected', n === id);
+    }
+  };
+  if (!location.hash && /Windows/.test(navigator.userAgent)) { try { history.replaceState(null, '', '#windows'); } catch (e) {} }
+  window.addEventListener('hashchange', () => { show(); if (/^#(android|windows)$/.test(location.hash)) document.getElementById('instalacja').scrollIntoView({behavior:'smooth'}); });
+  show();
+  const btn = document.getElementById('copyBtn');
+  btn.addEventListener('click', () => {
+    const txt = 'https://olixx101.github.io/magda/';
+    const ok = () => { btn.textContent = 'Skopiowano'; setTimeout(() => btn.textContent = 'Kopiuj adres', 1800); };
+    navigator.clipboard.writeText(txt).then(ok).catch(() => {
+      const r = document.createRange(); r.selectNodeContents(document.getElementById('addr'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Zaznaczono';
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

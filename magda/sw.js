@@ -1,6 +1,6 @@
 // Skin Mission Zadania — service worker: offline, powiadomienia push z serwera, kliknięcia w powiadomienia
 const NS = new URL(self.registration.scope).pathname;   // np. /ogarniam/ albo /magda/ — każda aplikacja ma osobną pamięć
-const SHELL = 'shell:' + NS + ':v12';
+const SHELL = 'shell:' + NS + ':v13';
 const DATA = 'data:' + NS;
 const FILES = ['./', './index.html', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/badge-96.png', './icons/icon.svg'];
 const ACTIONS = [{action:'done', title:'Zrobione'}, {action:'snooze', title:'Za godzinę'}];
